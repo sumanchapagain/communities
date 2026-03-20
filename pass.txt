@@ -1,2 +1,0 @@
-admin: Suchana@2022
-suman: 123
