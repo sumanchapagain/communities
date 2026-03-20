@@ -1,0 +1,5 @@
+Id,Name,IndicatorIds,CommunityIds,KnowledgeGenerated,Men,Women,OldMen,OldWomen,NewMen,NewWomen
+act_1,Health Post Rehabilitation,h1;p1,comm_1;comm_2,true,120,150,30,45,90,105
+act_2,Disaster Risk Training,h2;s1;s2,comm_1,false,50,60,10,15,40,45
+act_3,Mangrove Reforestation,n1;n2,comm_2,true,200,180,50,40,150,140
+act_4,Community Micro-finance Setup,f1;f2;s1,comm_1;comm_2,false,40,300,10,50,30,250
