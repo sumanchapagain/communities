@@ -148,7 +148,14 @@ body {
 .grade-center { 
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    width: 100%; pointer-events: none;
+    width: 80%; height: auto; pointer-events: none;
+    transition: width 0.3s ease, height 0.3s ease;
+}
+/* When a community is selected, expand to fill ~80% of the ring */
+.grade-center.comm-active {
+    width: 82%;
+    height: 80%;
+    pointer-events: auto;
 }
 .grade-cards { 
     display: grid; grid-template-columns: 1fr 1fr; gap: 20px 30px; pointer-events: auto; justify-items: center;
@@ -806,30 +813,40 @@ th.cap-S { color: #ce93d8 !important; }
 }
 
 .score-card {
-    background: rgba(30, 30, 38, 0.6);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 24px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: all 0.25s ease;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    position: relative;
-    overflow: hidden;
+    align-items: center;
 }
 
 .score-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: #00e676;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.07);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
 }
 
-.score-card .comm-name {
-    margin: 0;
-    font-size: 1.25rem;
+.score-card-header {
+    text-align: center;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.score-card-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
     color: #fff;
-    font-weight: 700;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+}
+
+.score-card-header .comm-id {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.35);
 }
 
 .score-card .comm-info {
@@ -841,54 +858,92 @@ th.cap-S { color: #ce93d8 !important; }
 }
 
 .score-metrics {
+    margin-top: 15px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    gap: 15px;
 }
 
-.metric-row {
+.gauge-container {
+    width: 200px;
+    height: 110px;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    justify-content: center;
+    align-items: flex-end;
 }
 
-.metric-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.metric-bar-bg {
-    height: 8px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.metric-bar-fill {
+.gauge-svg {
+    width: 100%;
     height: 100%;
-    border-radius: 4px;
-    transition: width 1s ease-out;
 }
 
-.score-level-tag {
-    align-self: flex-start;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 800;
+.gauge-arc {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: butt;
+}
+
+.gauge-needle {
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: 50% 90%;
+    filter: drop-shadow(0 0 3px rgba(0,0,0,0.5));
+}
+
+.needle-flood   { stroke: #00bcd4; }
+.needle-heat    { stroke: #ff7043; }
+.needle-generic { stroke: #aaa; }
+
+.score-legend {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.legend-dot {
+    font-size: 0.6rem;
+    line-height: 1;
+}
+
+.legend-label {
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.4px;
+    opacity: 0.75;
+    margin-right: 1px;
 }
 
-.level-High { background: rgba(0, 230, 118, 0.1); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.3); }
-.level-Medium { background: rgba(255, 235, 59, 0.1); color: #ffeb3b; border: 1px solid rgba(255, 235, 59, 0.3); }
-.level-Low { background: rgba(255, 23, 68, 0.1); color: #ff1744; border: 1px solid rgba(255, 23, 68, 0.3); }
+.legend-val {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
 
-/* ── Knowledge Screen ────────────────────────────────────────── */
+.val-flood { color: #00bcd4; }
+.val-flood .legend-dot,
+.val-flood .legend-val { color: #00bcd4; }
+
+.val-heat { color: #ff7043; }
+.val-heat .legend-dot,
+.val-heat .legend-val { color: #ff7043; }
+
+.val-generic { color: #aaa; }
+.val-generic .legend-dot,
+.val-generic .legend-val { color: #aaa; }
+
+/* Knowledge Screen ────────────────────────────────────────── */
 .knowledge-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1010,4 +1065,415 @@ th.cap-S { color: #ce93d8 !important; }
 .modal-table th:nth-child(n+3),
 .modal-table td:nth-child(n+3) {
     text-align: center;
+}
+
+/* ── Community Detail Inner View (inside grade-center) ──── */
+.comm-detail-inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: auto;
+    background: rgba(14, 14, 22, 0.92);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    animation: fadeInDetail 0.25s ease;
+}
+
+@keyframes fadeInDetail {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* Top half: gauge + demographics side by side */
+.comm-detail-top {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    min-height: 0;
+}
+
+.comm-detail-gauge {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    gap: 6px;
+    min-width: 0;
+}
+
+.cd-gauge-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.comm-detail-demo {
+    flex: 1;
+    padding: 10px 12px;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+.cd-demo-title {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #00e676;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(0,230,118,0.15);
+    padding-bottom: 4px;
+}
+
+.cd-demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 10px;
+}
+
+.cd-demo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.cd-demo-label {
+    font-size: 0.55rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.cd-demo-val {
+    font-size: 0.8rem;
+    color: #ddd;
+    font-weight: 600;
+}
+
+.cd-demo-desc {
+    margin-top: 6px;
+    font-size: 0.65rem;
+    color: #777;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+/* Bottom half: A/B/C/D boxes horizontal */
+.comm-detail-bottom {
+    flex-shrink: 0;
+    padding: 8px 10px;
+}
+
+.comm-grade-row {
+    display: flex;
+    gap: 8px;
+    justify-content: stretch;
+}
+
+.cd-grade-box {
+    flex: 1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.cd-grade-box:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+
+.cd-grade-letter {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.cd-grade-count {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.cd-grade-label {
+    font-size: 0.5rem;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    text-align: center;
+}
+
+/* ── Theme Toggle Switch ─────────────────────────────────── */
+.theme-toggle {
+    display: flex; align-items: center; gap: 7px;
+    cursor: pointer; user-select: none; margin-left: 12px;
+}
+.theme-toggle input[type='checkbox'] { display: none; }
+.theme-track {
+    width: 38px; height: 20px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; position: relative;
+    transition: background 0.3s, border-color 0.3s; flex-shrink: 0;
+}
+.theme-thumb {
+    position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; background: #888; border-radius: 50%;
+    transition: transform 0.3s, background 0.3s;
+}
+.theme-toggle input:checked ~ .theme-track { background: rgba(0,230,118,0.2); border-color: #00e676; }
+.theme-toggle input:checked ~ .theme-track .theme-thumb { transform: translateX(18px); background: #00e676; }
+.theme-label { font-size: 14px; line-height: 1; }
+
+/* ── Light Theme Overrides (body.light) ─────────────────── */
+body.light { background: #f0f2f5; color: #1a1a2e; }
+
+/* Header */
+body.light .app-header { background: rgba(255,255,255,0.95); border-bottom-color: #dde0e8; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+body.light .brand-text h1 { color: #1a1a2e; }
+body.light .brand-text span { color: #00a855; }
+body.light .logo { background: rgba(0,168,85,0.1); border-color: rgba(0,168,85,0.3); color: #00a855; }
+body.light .center-menu { background: rgba(230,232,240,0.9); border-color: rgba(0,0,0,0.1); }
+body.light .menu-btn { color: #555; }
+body.light .menu-btn:hover { color: #1a1a2e; background: rgba(0,0,0,0.05); }
+body.light .menu-btn.active { background: #00a855; color: #fff; box-shadow: 0 4px 15px rgba(0,168,85,0.25); }
+body.light .view-btn { color: #777; }
+body.light .view-btn:hover { color: #1a1a2e; }
+body.light .view-btn.active { background: #00a855; color: #fff; box-shadow: 0 4px 12px rgba(0,168,85,0.25); }
+body.light .theme-track { background: rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.15); }
+body.light .theme-thumb { background: #aaa; }
+body.light .theme-toggle input:checked ~ .theme-track { background: rgba(0,168,85,0.2); border-color: #00a855; }
+body.light .theme-toggle input:checked ~ .theme-track .theme-thumb { background: #00a855; }
+
+/* Sidebars */
+body.light .sidebar { background: rgba(255,255,255,0.97); box-shadow: 2px 0 16px rgba(0,0,0,0.06); }
+body.light .comm-item { background: #eef0f5; border-color: #d4d7e3; color: #333; }
+body.light .comm-item:hover { background: #e0e4ef; border-color: #aaa; }
+body.light .comm-item.active { background: #1a1a2e !important; color: #fff !important; border-color: #1a1a2e; box-shadow: 0 0 12px rgba(26,26,46,0.25); font-weight: bold; }
+body.light .comm-item.active span { color: #ffffff !important; }
+body.light .comm-item.active .lock-icon { color: #ffffff !important; }
+body.light .comm-item.hover-highlight { background: #1a1a2e !important; color: #fff !important; border-color: #1a1a2e !important; }
+body.light .comm-item.hover-highlight span { color: #ffffff !important; }
+
+/* Indicator ring */
+body.light .indicator-ring { border-color: rgba(0,0,0,0.12); }
+body.light .indicator-item { background: #e8eaf2; border-color: #bbbdd4; color: #333; }
+body.light .indicator-item:hover { background: #d0d3e8; border-color: #888; }
+body.light .indicator-item.active { background: #1a1a2e !important; color: #fff !important; border-color: #1a1a2e; box-shadow: 0 0 12px rgba(26,26,46,0.35); }
+body.light .indicator-item.hover-highlight { background: #1a1a2e !important; color: #fff !important; border-color: #1a1a2e !important; }
+body.light .grade-box { background: #eef0f5; }
+/* Grade B amber fix — #ffeb3b yellow is invisible on light backgrounds */
+body.light #grade-B { color: #b07800 !important; border-color: #b07800 !important; }
+body.light #grade-B.active { background: #b07800 !important; color: #fff !important; box-shadow: 0 0 28px rgba(176,120,0,0.4) !important; }
+/* Grade needle legend in score cards — also fix heat needle label */
+body.light .val-heat .legend-val,
+body.light .val-heat .legend-dot,
+body.light .val-heat .legend-label { color: #c08800 !important; }
+body.light .center-heading { color: #1a1a2e; text-shadow: none; }
+body.light .filters { color: #666; }
+body.light .filters label:hover { color: #1a1a2e; }
+body.light #hover-label-display { background: rgba(255,255,255,0.92); color: #00a855; border-color: rgba(0,168,85,0.3); text-shadow: none; }
+
+/* Table view */
+body.light #table-view { background: #f0f2f5; }
+body.light .table-toolbar { background: rgba(255,255,255,0.9); border-bottom-color: #dde0e8; }
+body.light #data-table th { background: #e8eaf6; color: #444; border-color: #d1d5db; }
+body.light #data-table td { border-color: #e5e7eb; color: #1a1a2e; }
+
+/* Sticky community name column in light mode */
+body.light #data-table thead th:first-child,
+body.light #data-table tbody td:first-child {
+    background: #ffffff !important;
+    border-right: 2px solid #dde0e8;
+    color: #1a1a2e;
+}
+body.light #data-table thead th:first-child { color: #1a1a2e; }
+body.light #data-table tbody tr:nth-child(even) td:first-child { background: #f9fafb !important; }
+body.light #data-table tbody td:first-child:hover { background: #f3f4f6 !important; color: #00a855; }
+body.light #data-table tbody tr:hover td:first-child { background: #f3f4f6 !important; color: #00a855; }
+
+/* Grade cell colors refined for light theme */
+body.light #data-table td.grade-A { background: #ecfdf5; color: #059669; }
+body.light #data-table td.grade-B { background: #fffbeb; color: #b07800; } /* Amber for B */
+body.light #data-table td.grade-C { background: #fff7ed; color: #d97706; }
+body.light #data-table td.grade-D { background: #fef2f2; color: #dc2626; }
+body.light #data-table td.grade-na { background: #f3f4f6; color: #9ca3af; }
+
+/* Capital-letter color coding in light mode headers */
+body.light th.cap-F { color: #1e40af !important; background: #eff6ff !important; }
+body.light th.cap-H { color: #991b1b !important; background: #fef2f2 !important; }
+body.light th.cap-N { color: #166534 !important; background: #f0fdf4 !important; }
+body.light th.cap-P { color: #92400e !important; background: #fffbeb !important; }
+body.light th.cap-S { color: #6b21a8 !important; background: #faf5ff !important; }
+
+/* Sort highlights in light mode */
+body.light #data-table thead th.th-sorted { background: #dbeafe !important; box-shadow: inset 0 -3px 0 #00a855; color: #1e40af; }
+body.light #data-table tbody tr.tr-sorted td { background: rgba(186, 230, 253, 0.2) !important; }
+body.light #data-table tbody tr.tr-sorted td:first-child { 
+    background: #f0f9ff !important; 
+    color: #00a855;
+    border-right: 2px solid #00a855;
+}
+
+body.light #data-table tbody tr:hover td { background: rgba(0,0,0,0.03); }
+body.light .table-scroll-wrapper { border-color: #dde0e8; }
+
+/* Screens & toolbars */
+body.light .app-screen { background: #f0f2f5; }
+body.light .screen-toolbar { background: rgba(255,255,255,0.85); border-color: #dde0e8; }
+body.light .search-box { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); }
+body.light .search-box input { color: #1a1a2e; }
+body.light .chip { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: #555; }
+body.light .chip:hover { border-color: #00a855; color: #1a1a2e; }
+body.light .chip.active { background: #00a855; color: #fff; border-color: #00a855; }
+
+/* Activity cards */
+body.light .act-card { background: rgba(255,255,255,0.95); border-color: rgba(0,0,0,0.07); }
+body.light .act-card:hover { background: #fff; border-color: var(--accent); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+body.light .act-title { color: #1a1a2e; }
+body.light .act-date-badge { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: #666; }
+body.light .act-year-badge { background: rgba(0,168,85,0.1); border-color: rgba(0,168,85,0.3); color: #00a855; }
+body.light .act-footer { border-top-color: rgba(0,0,0,0.06); color: #888; }
+body.light .act-knowledge-tag { background: rgba(0,168,85,0.1); color: #00a855; border-color: rgba(0,168,85,0.2); }
+
+/* Knowledge cards */
+body.light .know-card { background: #fff; border-color: rgba(0,0,0,0.08); }
+body.light .know-card:hover { border-color: #00a855; }
+body.light .know-img { background: #eef0f5; color: rgba(0,0,0,0.2); }
+body.light .know-tag { color: #00a855; }
+body.light .know-title { color: #1a1a2e; }
+body.light .know-desc { color: #555; }
+
+/* Score cards */
+body.light .score-card { background: rgba(255,255,255,0.95); border-color: rgba(0,0,0,0.07); }
+body.light .score-card:hover { background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+body.light .score-card-header h3 { color: #1a1a2e; }
+
+/* Modals */
+body.light .modal-overlay { background: rgba(0,0,0,0.45); }
+body.light .modal-content { background: #fff; border-color: rgba(0,0,0,0.1); color: #1a1a2e; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
+body.light .modal-close { color: #888; }
+body.light .modal-close:hover { color: #1a1a2e; }
+body.light .modal-body h2 { color: #00a855; }
+body.light .modal-detail-row { color: #333; }
+body.light .modal-detail-row strong { color: #00a855; }
+body.light .modal-table th { background: rgba(0,168,85,0.06); color: #00a855; border-bottom-color: rgba(0,0,0,0.1); }
+body.light .modal-table td { color: #333; border-bottom-color: rgba(0,0,0,0.05); }
+
+/* Comm detail inner */
+body.light .comm-detail-inner { background: rgba(255,255,255,0.98); border-color: rgba(0,0,0,0.08); }
+body.light .comm-detail-top { border-bottom-color: rgba(0,0,0,0.06); }
+body.light .comm-detail-gauge { border-right-color: rgba(0,0,0,0.06); }
+body.light .cd-gauge-title { color: #1a1a2e; }
+body.light .cd-demo-title { color: #00a855; border-bottom-color: rgba(0,168,85,0.15); }
+body.light .cd-demo-label { color: #999; }
+body.light .cd-demo-val { color: #333; }
+body.light .cd-grade-box { background: rgba(0,0,0,0.02); }
+body.light .cd-grade-box:hover { background: rgba(0,0,0,0.06); }
+body.light .cd-grade-count { color: #1a1a2e; }
+body.light .cd-grade-label { color: #999; }
+
+/* HUD */
+body.light #interaction-hud { background: rgba(255,255,255,0.96); border-color: rgba(0,0,0,0.15); color: #333; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+body.light #hud-text { background: rgba(0,0,0,0.05); color: #00a855; border-color: rgba(0,168,85,0.3); }
+body.light #interaction-hud.unlocked { border-color: #00a855; }
+body.light .nav-arrow { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.12); color: #555; }
+body.light .nav-arrow:hover { background: #00a855; color: #fff; border-color: #00a855; }
+body.light .no-results { color: #bbb; }
+
+/* Smooth global transitions */
+body *, body.light * { transition: background-color 0.25s ease, color 0.1s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+
+/* ── Global Pop-up / Modal Text Fixes for Light Mode ── */
+/* Base text reset for all common containers */
+body.light .modal-content,
+body.light .sidebar,
+body.light .app-screen,
+body.light .act-card,
+body.light .know-card,
+body.light .score-card,
+body.light #table-view {
+    color: #1a1a2e !important;
+}
+
+/* Specific overrides for light-mode text that defaults to white in dark mode */
+body.light .comm-item span,
+body.light .act-title,
+body.light .know-title,
+body.light .score-card-header h3,
+body.light .modal-content .modal-body,
+body.light .modal-content h2,
+body.light .modal-content h3,
+body.light .modal-content p,
+body.light [id^="sd-"] span,
+body.light [id^="sd-"] div {
+    color: #1a1a2e; /* Removed !important to allow inline highlight override */
+}
+
+/* Target elements with hardcoded light colors from JS */
+body.light [style*="color:#fff"],
+body.light [style*="color:#ddd"],
+body.light [style*="color:#ccc"],
+body.light [style*="color:#aaa"],
+body.light [style*="color:#888"],
+body.light [style*="color: white"],
+body.light [style*="color: #ffffff"],
+body.light [style*="color: #dddddd"],
+body.light [style*="color: #cccccc"],
+body.light [style*="color: #aaaaaa"] {
+    color: #1a1a2e !important;
+}
+
+/* Force dark text for specific identifiers/codes */
+body.light .card-code,
+body.light .act-year-badge,
+body.light .act-date-badge {
+    color: #1a1a2e !important;
+}
+
+/* Indicator ring adjustments */
+body.light .indicator-item { color: #1a1a2e !important; font-weight: 600; }
+body.light .indicator-item.active { color: #ffffff !important; }
+
+/* HUD refinements */
+body.light #interaction-hud { color: #111 !important; border-color: rgba(0,0,0,0.15) !important; font-weight: 700; }
+body.light #hud-text { color: #00703c !important; }
+
+/* Score Detailed Modal specific overrides */
+body.light #score-detail-modal-body table td { color: #1a1a2e !important; border-color: #eee !important; }
+body.light #score-detail-modal-body table th { color: #555 !important; background: #f5f6fa !important; border-color: #ddd !important; }
+body.light #score-detail-modal-body button[id^="sdsort-"] { border-color: rgba(0,0,0,0.1) !important; background: rgba(0,0,0,0.03) !important; color: #555 !important; }
+body.light #score-detail-modal-body button[id^="sdsort-"].active { background: #00a855 !important; color: #fff !important; }
+
+/* Activity Reach Overrides */
+body.light [id^="sd-act-detail"] table tfoot tr td { color: #1a1a2e !important; border-top-color: #ccc !important; }
+body.light [id^="sd-act-detail"] table thead tr th { color: #555 !important; border-bottom: 2px solid #ddd !important; }
+
+/* Knowledge Description Override */
+body.light [id^="sd-know-detail"] p {
+    background: #f8f9fa !important;
+    border-left: 3px solid #00a855 !important;
+    color: #1a1a2e !important;
+}
+
+/* Force dark text for specific identifiers/codes */
+body.light .card-code,
+body.light .act-year-badge,
+body.light .act-date-badge {
+    color: #1a1a2e !important;
 }
